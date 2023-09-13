@@ -51,21 +51,22 @@ public class Battle {
             int attackPower = attacker.calculateAttackPower();
             int defensePower = defender.calculateDefensePower();
 
-            int effectiveness = random.nextInt(100) + 1; // Random number between 1 and 100
+            int effectiveness = random.nextInt(100) + 1;
             int damage = ((attackPower * effectiveness) - defensePower) / 500;
 
             if (attacker.getRace().equals("human")) {
-                damage = (int) (damage * 1.0);
+                damage = (int) (int) (((attackPower * effectiveness) - defensePower) / 500.0 * 100);
             } else if (attacker.getRace().equals("elf")) {
-                damage = (int) (damage * 1.05);
+                damage = (int) (((attackPower * effectiveness) - defensePower) / 500.0 * 100 * 1.05);
             } else if (attacker.getRace().equals("orc")) {
-                damage = (int) (damage * 1.1);
+                damage = (int) (((attackPower * effectiveness) - defensePower) / 500.0 * 100 * 1.1);
             }
 
             defender.takeDamage(damage);
 
             String log = attacker.getName(player2Character.getLevel() + 1) + " ataca a " + defender.getName(player2Character.getLevel() + 1) + " y le quita " +
                     damage + " de salud. " + defender.getName(player2Character.getLevel() + 1) + " queda con " + defender.getHealth() + " de salud.";
+            System.out.println(log);
             battleLogs.add(log);
 
             Character temp = attacker;

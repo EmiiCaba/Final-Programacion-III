@@ -18,20 +18,24 @@ public class Character {
     }
 
     public int getVelocity() {
+
         return velocity;
     }
 
 
     public int getDexterity() {
+
         return dexterity;
     }
 
 
     public int getStrength() {
+
         return strength;
     }
 
     public int getArmor() {
+
         return armor;
     }
 

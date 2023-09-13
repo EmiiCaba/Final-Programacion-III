@@ -113,30 +113,71 @@ public class Game {
             System.out.print("Nombre: ");
             String name = scanner.nextLine();
 
-            System.out.println("Elige una raza:");
-            for (Race raceOption : Race.values()) {
-                System.out.println(raceOption.ordinal() + ". " + raceOption.name());
-            }
-            int raceChoice = scanner.nextInt();
-            scanner.nextLine(); // Limpia el salto de línea
-
+         //elige raza
+            int raceChoice;
             Race[] races = Race.values();
-            String race = races[raceChoice].name();
+            String race = null ;
+
+            do {
+                System.out.println("Elige una raza:");
+                for (Race raceOption : races) {
+                    System.out.println(raceOption.ordinal() + ". " + raceOption.name());
+                }
+                raceChoice = scanner.nextInt();
+                scanner.nextLine(); // Limpia el salto de línea
+
+                if (raceChoice >= 0 && raceChoice < races.length) {
+                    race = races[raceChoice].name();
+                } else {
+                    System.out.println("Error: Opción de raza inválida. Por favor, ingrese un número válido.");
+                }
+            } while (raceChoice < 0 || raceChoice >= races.length);
 
 
-            System.out.println("Elige un apodo:");
-            for (Nickname nicknameOption : Nickname.values()) {
-                System.out.println(nicknameOption.ordinal() + ". " + nicknameOption.name());
-            }
-            int nicknameChoice = scanner.nextInt();
-            scanner.nextLine(); // Limpia el salto de línea
-
-
+            int nicknameChoice;
             Nickname[] nicknames = Nickname.values();
-            String nickname = nicknames[nicknameChoice].name();
+            String nickname = null;
 
-            System.out.print("Velocidad: del 1 al 10 :");
-            int velocity = scanner.nextInt();
+            do {
+                System.out.println("Elige un apodo:");
+                for (Nickname nicknameOption : nicknames) {
+                    System.out.println(nicknameOption.ordinal() + ". " + nicknameOption.name());
+                }
+                nicknameChoice = scanner.nextInt();
+                scanner.nextLine(); // Limpia el salto de línea
+
+                if (nicknameChoice >= 0 && nicknameChoice < nicknames.length) {
+                    nickname = nicknames[nicknameChoice].name();
+                } else {
+                    System.out.println("Error: Opción de apodo inválida. Por favor, ingrese un número válido.");
+                }
+            } while (nicknameChoice < 0 || nicknameChoice >= nicknames.length);
+
+
+            int velocity = 0;
+
+            while (true) {
+                System.out.print("Velocidad: del 1 al 10: ");
+                try {
+                    velocity = scanner.nextInt();
+                    if (velocity >= 1 && velocity <= 10) {
+                        break; // Salir del bucle si la velocidad es válida
+                    } else {
+                        System.out.println("Error: La velocidad debe estar entre 1 y 10.");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error: Entrada inválida. Introduce un número del 1 al 10.");
+                    scanner.nextLine(); // Limpiar el búfer del escáner
+                }
+            }
+
+            System.out.println(" La Velocidad es: " + velocity);
+
+
+
+
+            /*System.out.print("Velocidad: del 1 al 10 :");
+            int velocity = scanner.nextInt();*/
 
             System.out.print("Destreza: del 1 al 5 :");
             int dexterity = scanner.nextInt();
