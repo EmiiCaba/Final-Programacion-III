@@ -43,9 +43,9 @@ public class Game {
         while (!exit) {
             System.out.println("----- Menú del Juego -----");
             System.out.println("Les presento los JUGADORES:");
-            System.out.println("Orco:\n" + ORCO_ASCII);
-            System.out.println("Elfo:\n" + ELFO_ASCII);
-            System.out.println("Humano:\n" + HUMANO_ASCII);
+            System.out.println("ORCO :\n" + ORCO_ASCII);
+            System.out.println("ELFO :\n" + ELFO_ASCII);
+            System.out.println("HUMANO :\n" + HUMANO_ASCII);
             System.out.println("1. Iniciar partida con personajes aleatorios");
             System.out.println("2. Iniciar partida con personajes ingresados manualmente");
             System.out.println("3. Leer logs de partidas jugadas");
@@ -76,6 +76,7 @@ public class Game {
                     break;
             }
         }
+        System.out.println("------------------------------------------------------------");
     }
 
     private void startRandomGame() {
@@ -99,7 +100,7 @@ public class Game {
         System.out.println("Ingrese los datos del primer personaje:");
         Character player1Character = createCharacter(scanner);
         scanner.nextLine();
-
+        System.out.println("------------------------------------------------------------");
         System.out.println("Ingrese los datos del segundo personaje:");
         Character player2Character = createCharacter(scanner);
 
@@ -354,6 +355,7 @@ public class Game {
         }
         private void printCharacterInfo (Character characters1, Character characters2){
             System.out.println("Información de los personajes:");
+            System.out.println(" ");
             System.out.println("JUGADOR  1 ");
             printCharacterDetails(characters1);
             System.out.println("JUGADOR  2 ");

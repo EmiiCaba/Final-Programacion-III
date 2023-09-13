@@ -39,7 +39,7 @@ public class Battle {
     public void start() {
 
 
-        System.out.println("Ronda de batalla:");
+        System.out.println(" ------   Ronda de batalla:    ---------");
         System.out.println(player1Character.getName(player2Character.getLevel() + 1) + " VS " + player2Character.getName(player2Character.getLevel() + 1));
 
         Character attacker = getRandomAttacker();
@@ -68,7 +68,7 @@ public class Battle {
                     damage + " de salud. " + defender.getName(player2Character.getLevel() + 1) + " queda con " + defender.getHealth() + " de salud.";
             System.out.println(log);
             battleLogs.add(log);
-
+            System.out.println(log + "1");
             Character temp = attacker;
             attacker = defender;
             defender = temp;
@@ -83,11 +83,11 @@ public class Battle {
 
             // Imprimir el dibujo del personaje ganador
             if (player1Character.getRace().equals("ORCO")) {
-                System.out.println("Dibujo del Orco:\n" + ORCO_ASCII);
+                System.out.println("Yo soy el  ORCO GANADOR :\n" + ORCO_ASCII);
             } else if (player1Character.getRace().equals("ELFO")) {
-                System.out.println("Dibujo del Elfo:\n" + ELFO_ASCII);
+                System.out.println("Yo soy el ELFO GANADOR :\n" + ELFO_ASCII);
             } else if (player1Character.getRace().equals("HUMAN")) {
-                System.out.println("Dibujo del Humano:\n" + HUMANO_ASCII);
+                System.out.println("Yo soy el HUMANO GANADOR :\n" + HUMANO_ASCII);
             }
         } else {
             String winnerName = player2Character.getName(player2Character.getLevel() + 1);
@@ -96,11 +96,11 @@ public class Battle {
 
             // Imprimir el dibujo del personaje ganador
             if (player2Character.getRace().equals("ORCO")) {
-                System.out.println("Dibujo del Orco:\n" + ORCO_ASCII);
+                System.out.println("Yo soy el ORCO:\n" + ORCO_ASCII);
             } else if (player2Character.getRace().equals("ELFO")) {
-                System.out.println("Dibujo del Elfo:\n" + ELFO_ASCII);
+                System.out.println("Yo soy el ELFO:\n" + ELFO_ASCII);
             } else if (player2Character.getRace().equals("HUMAN")) {
-                System.out.println("Dibujo del Humano:\n" + HUMANO_ASCII);
+                System.out.println("Yo soy el HUMANO:\n" + HUMANO_ASCII);
             }
         }
         System.out.println();
