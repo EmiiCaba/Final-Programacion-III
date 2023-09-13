@@ -83,12 +83,12 @@ public class Character {
     public String getName(int level) {
         if (this.getRace().equalsIgnoreCase("human")) {
             return "Humano";
-        } else if (this.getRace().equalsIgnoreCase("elf")) {
+        } else if (this.getRace().equalsIgnoreCase("elfo")) {
             return "Elfo";
-        } else if (this.getRace().equalsIgnoreCase("orc")) {
+        } else {
             return "Orco";
         }
-        return "Desconocido";
+
     }
 
 

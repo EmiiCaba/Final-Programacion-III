@@ -54,11 +54,11 @@ public class Battle {
             int effectiveness = random.nextInt(100) + 1;
             int damage = ((attackPower * effectiveness) - defensePower) / 500;
 
-            if (attacker.getRace().equals("human")) {
+            if (attacker.getRace().equals("HUMAN")) {
                 damage = (int) (int) (((attackPower * effectiveness) - defensePower) / 500.0 * 100);
-            } else if (attacker.getRace().equals("elf")) {
+            } else if (attacker.getRace().equals("ELFO")) {
                 damage = (int) (((attackPower * effectiveness) - defensePower) / 500.0 * 100 * 1.05);
-            } else if (attacker.getRace().equals("orc")) {
+            } else if (attacker.getRace().equals("ORCO")) {
                 damage = (int) (((attackPower * effectiveness) - defensePower) / 500.0 * 100 * 1.1);
             }
 
@@ -82,11 +82,11 @@ public class Battle {
             player1Character.setHealth(player1Character.getHealth() + 10);
 
             // Imprimir el dibujo del personaje ganador
-            if (player1Character.getRace().equals("orc")) {
+            if (player1Character.getRace().equals("ORCO")) {
                 System.out.println("Dibujo del Orco:\n" + ORCO_ASCII);
-            } else if (player1Character.getRace().equals("elf")) {
+            } else if (player1Character.getRace().equals("ELFO")) {
                 System.out.println("Dibujo del Elfo:\n" + ELFO_ASCII);
-            } else if (player1Character.getRace().equals("human")) {
+            } else if (player1Character.getRace().equals("HUMAN")) {
                 System.out.println("Dibujo del Humano:\n" + HUMANO_ASCII);
             }
         } else {
@@ -95,11 +95,11 @@ public class Battle {
             player2Character.setHealth(player2Character.getHealth() + 10);
 
             // Imprimir el dibujo del personaje ganador
-            if (player2Character.getRace().equals("orc")) {
+            if (player2Character.getRace().equals("ORCO")) {
                 System.out.println("Dibujo del Orco:\n" + ORCO_ASCII);
-            } else if (player2Character.getRace().equals("elf")) {
+            } else if (player2Character.getRace().equals("ELFO")) {
                 System.out.println("Dibujo del Elfo:\n" + ELFO_ASCII);
-            } else if (player2Character.getRace().equals("human")) {
+            } else if (player2Character.getRace().equals("HUMAN")) {
                 System.out.println("Dibujo del Humano:\n" + HUMANO_ASCII);
             }
         }
