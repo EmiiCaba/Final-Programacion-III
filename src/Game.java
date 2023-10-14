@@ -1,51 +1,28 @@
 import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
+
 public class Game {
-    private List<String> logs;
+
+    List<Character> characters;
     private FileWriter fileWriter;
+    DibujoAscii dibujoAscii = new DibujoAscii();
 
-    public Game() {
-        logs = new ArrayList<>();
-    }
-
-    private static final String ORCO_ASCII =
-            "    ,      ,   \n" +
-                    "   / \\  . / \\  \n" +
-                    "  /   \\/   \\\n" +
-                    " |  o   :  o  |\n" +
-                    " |  .   :   .  |\n" +
-                    "  \\   /\\   /\n" +
-                    "   \\_/  `-'";
-
-    private static final String ELFO_ASCII =
-            "     |    |  \n" +
-                    "    /     \\   \n" +
-                    "   /_______\\ \n" +
-                    "   |  o o  |  \n" +
-                    "   |   ^   |  \n" +
-                    "   |   -   |  \n" +
-                    "    \\_____/  ";
-
-    private static final String HUMANO_ASCII =
-            "    O\n" +
-                    "   /|\\  \n" +
-                    "   / \\  ";
-
+    List<Character> existingCharacters = new ArrayList<>();
     public void start() {
         Scanner scanner = new Scanner(System.in);
         boolean exit = false;
 
         while (!exit) {
+
+            System.out.println("----- JUEGO DE TRONOS  -----");
+            System.out.println("----------------------------");
             System.out.println("----- Menú del Juego -----");
             System.out.println("Les presento los JUGADORES:");
-            System.out.println("ORCO :\n" + ORCO_ASCII);
-            System.out.println("ELFO :\n" + ELFO_ASCII);
-            System.out.println("HUMANO :\n" + HUMANO_ASCII);
+            System.out.println("ORCO :\n" + dibujoAscii.dibujoOrco());
+            System.out.println("ELFO :\n" + dibujoAscii.dibujoElfo( ));
+            System.out.println("HUMANO :\n" + dibujoAscii.dibujoHumano());
             System.out.println("1. Iniciar partida con personajes aleatorios");
             System.out.println("2. Iniciar partida con personajes ingresados manualmente");
             System.out.println("3. Leer logs de partidas jugadas");
@@ -60,6 +37,7 @@ public class Game {
                     startRandomGame();
                     break;
                 case 2:
+
                     startManualGame();
                     break;
                 case 3:
@@ -70,6 +48,7 @@ public class Game {
                     break;
                 case 5:
                     exit = true;
+                    System.out.println("Te esperamos pronto a jugar de nuevo");
                     break;
                 default:
                     System.out.println("Opción inválida. Por favor, ingrese una opción válida.");
@@ -80,239 +59,232 @@ public class Game {
     }
 
     private void startRandomGame() {
+
         List<Character> characters = generateRandomCharacters();
-        Character player1Character = characters.get(0);
-        Character player2Character = characters.get(1);
+
+        if (characters.size() < 7) {
+            System.out.println("No hay suficientes personajes para iniciar el juego.");
+            return;
+        }
+
+        List<Character> player1Characters = new ArrayList<>(characters.subList(0, 3));
+        List<Character> player2Characters = new ArrayList<>(characters.subList(3, 6));
+
+
 
         // Imprime información de los personajes antes de la batalla
-        printCharacterInfo(player1Character, player2Character);
+        printCharacterInfo( player1Characters,  player2Characters);
 
-        Battle battle = new Battle(player1Character, player2Character);
+        Battle battle = new Battle(player1Characters, player2Characters,characters);
         battle.start();
 
         saveLogs(battle.getBattleLogs());
     }
 
+
+    /*private void startManualGame() {
+        Scanner scanner = new Scanner(System.in);
+        List<Character> characters= new ArrayList<>();
+        List<Character> player1Characters = new ArrayList<>();
+        List<Character> player2Characters = new ArrayList<>();
+
+        System.out.println("Ingrese los datos del primer Jugador:");
+        for (int i = 0; i < 3; i++) {
+            System.out.println("Ingrese los datos del personaje " + (i + 1) + " del Primer jugador:");
+            Character player1Characters = createManualCharacters(scanner));
+            player1Characters.add(player1Character);
+        }
+        scanner.nextLine();
+        System.out.println("------------------------------------------------------------");
+        System.out.println("Ingrese los datos del segundo  Jugador:");
+        for (int i = 0; i < 3; i++) {
+            System.out.println("Ingrese los datos del personaje " + (i + 1) + " del Segundo jugador:");
+            List<Character> player2Characters = createManualCharacters(scanner);
+            player2Characters.add(player2Character);
+        }
+
+
+
+        // Imprime información de los personajes antes de la batalla
+        printCharacterInfo( player1Characters,  player2Characters);
+
+        Battle battle = new Battle(player1Characters, player2Characters, characters);
+        battle.start();
+
+        saveLogs(battle.getBattleLogs());
+    }
+
+    public List<Character> createManualCharacters(Scanner scanner) {
+
+        List<Character> characters = new ArrayList<>();
+        //System.out.println("Ingrese los datos del personaje:");
+        String name = enterName(scanner);
+        Race race = enterRace(scanner);
+        String nickname = enterNickname(scanner, race);
+        int velocity = enterStat(scanner, "Velocidad entre 1 a 10", 1, 10);
+        int dexterity = enterStat(scanner, "Destreza entre 1 a 10", 1, 5);
+        int strength = enterStat(scanner, "Fuerza entre 1 a 10", 1, 10);
+        int level = enterStat(scanner, "Nivel entre 1 a 10", 1, 10);
+        int armor = enterStat(scanner, "Armadura entre 1 a 10", 1, 10);
+        int health = enterStat(scanner, "Salud entre 50 a 100 ", 50, 100);
+        characters.add(new Character(name, race.name(), nickname, velocity, dexterity, strength, level, armor, health));
+
+        while (characters.size() < 3) {
+            System.out.println("Ingrese los datos del personaje " + (characters.size() + 1) + ":");
+            Character character = new Character(name, race.name(), nickname, velocity, dexterity, strength, level, armor, health);
+            characters.add(character);
+        }
+
+        return characters;
+    }*/
 
     private void startManualGame() {
         Scanner scanner = new Scanner(System.in);
+        List<Character> player1Characters = createPlayerCharacters(scanner, "Primer");
+        List<Character> player2Characters = createPlayerCharacters(scanner, "Segundo");
 
-        System.out.println("Ingrese los datos del primer personaje:");
-        Character player1Character = createCharacter(scanner);
-        scanner.nextLine();
-        System.out.println("------------------------------------------------------------");
-        System.out.println("Ingrese los datos del segundo personaje:");
-        Character player2Character = createCharacter(scanner);
+        if (player1Characters.size() < 3 || player2Characters.size() < 3) {
+            System.out.println("No hay suficientes personajes para iniciar el juego.");
+            return;
+        }
 
-        // Imprime información de los personajes antes de la batalla
-        printCharacterInfo(player1Character, player2Character);
+        printCharacterInfo(player1Characters, player2Characters);
 
-        Battle battle = new Battle(player1Character, player2Character);
+        Battle battle = new Battle(player1Characters, player2Characters,characters);
         battle.start();
 
         saveLogs(battle.getBattleLogs());
     }
+    private List<Character> createPlayerCharacters(Scanner scanner, String player) {
 
-    private Character createCharacter(Scanner scanner) {
-        System.out.print("Nombre: ");
-        String name = scanner.nextLine();
+        List<Character> characters = new ArrayList<>();
 
-        //elige raza
+        System.out.println("Ingrese los datos del " + player + " Jugador:");
+        for (int i = 0; i < 3; i++) {
+            System.out.println("Ingrese los datos del personaje " + (i + 1) + " del " + player + " jugador:");
+            Character character = createManualCharacter(scanner, characters);
+            characters.add(character);
+        }
 
-        int raceChoice;
-        Race[] races = Race.values();
-        String race = null;
+        return characters;
+    }
 
-        do {
+    private Character createManualCharacter(Scanner scanner, List<Character> characters) {
+        String name = enterName(scanner);
+        Race race = enterRace(scanner);
+        String nickname = enterNickname(scanner, race);
+        int velocity = enterStat(scanner, "Velocidad entre 1 a 10", 1, 10);
+        int dexterity = enterStat(scanner, "Destreza entre 1 a 20", 1, 20);
+        int strength = enterStat(scanner, "Fuerza entre 1 a 300", 1, 30);
+        int level = enterStat(scanner, "Nivel entre 1 a 10", 1, 10);
+        int armor = enterStat(scanner, "Armadura entre 1 a 100", 1, 100);
+        int health = enterStat(scanner, "Salud entre 50 a 100", 50, 100);
+
+        Character character =  new Character(name, race.name(), nickname, velocity, dexterity, strength, level, armor, health);
+        characters.add(character);
+        return character;
+
+    }
+
+    private String enterName(Scanner scanner) {
+        String name;
+        while (true) {
+            System.out.print("Nombre: ");
+            name = scanner.nextLine();
+
+            if (name.isEmpty()) {
+                System.out.println("El nombre no puede estar vacío. Por favor, ingresa un nombre válido.");
+            } else if (!Character.isLetter(name.charAt(0))) {
+                System.out.println("El nombre debe comenzar con una letra.");
+            } else {
+                break; // Salir del bucle si el nombre es válido
+            }
+        }
+        return name;
+    }
+
+    private Race enterRace(Scanner scanner) {
+        Race race;
+        while (true) {
             System.out.println("Elige una raza:");
-            for (Race raceOption : races) {
+            for (Race raceOption : Race.values()) {
                 System.out.println(raceOption.ordinal() + ". " + raceOption.name());
             }
-            raceChoice = scanner.nextInt();
+            int raceChoice = scanner.nextInt();
             scanner.nextLine(); // Limpia el salto de línea
 
-            if (raceChoice >= 0 && raceChoice < races.length) {
-                race = races[raceChoice].name();
+            if (raceChoice >= 0 && raceChoice < Race.values().length) {
+                race = Race.values()[raceChoice];
+                break;
             } else {
                 System.out.println("Error: Opción de raza inválida. Por favor, ingrese un número válido.");
             }
-        } while (raceChoice < 0 || raceChoice >= races.length);
+        }
+        return race;
+    }
 
-        int nicknameChoice;
-        String[] nicknames = new String[0];
+    private String enterNickname(Scanner scanner, Race race) {
+        String[] nicknames;
 
-        if (race.equals("ELFO")) {
-            NicknameElf[] nicknameElf = NicknameElf.values();
-            nicknames = new String[nicknameElf.length];
-            for (int i = 0; i < nicknameElf.length; i++) {
-                nicknames[i] = nicknameElf[i].name();
-            }
-        } else if (race.equals("ORCO")) {
-            NicknameOrc[] nicknameOrc = NicknameOrc.values();
-            nicknames = new String[nicknameOrc.length];
-            for (int i = 0; i < nicknameOrc.length; i++) {
-                nicknames[i] = nicknameOrc[i].name();
-            }
-        } else if (race.equals("HUMAN")) {
-            NicknameHuman[] nicknameHuman = NicknameHuman.values();
-            nicknames = new String[nicknameHuman.length];
-            for (int i = 0; i < nicknameHuman.length; i++) {
-                nicknames[i] = nicknameHuman[i].name();
-            }
+        switch (race) {
+            case ELFO:
+                nicknames = Arrays.stream(NicknameElf.values())
+                        .map(Enum::name)
+                        .toArray(String[]::new);
+                break;
+            case ORCO:
+                nicknames = Arrays.stream(NicknameOrc.values())
+                        .map(Enum::name)
+                        .toArray(String[]::new);
+                break;
+            case HUMAN:
+            default:
+                nicknames = Arrays.stream(NicknameHuman.values())
+                        .map(Enum::name)
+                        .toArray(String[]::new);
+                break;
         }
 
-        String  nickname = null;
-
-        do {
+        String nickname;
+        while (true) {
             System.out.println("Elige un apodo:");
             for (int i = 0; i < nicknames.length; i++) {
                 System.out.println(i + ". " + nicknames[i]);
             }
-            nicknameChoice = scanner.nextInt();
+            int nicknameChoice = scanner.nextInt();
             scanner.nextLine(); // Limpia el salto de línea
 
             if (nicknameChoice >= 0 && nicknameChoice < nicknames.length) {
                 nickname = nicknames[nicknameChoice];
+                break;
             } else {
                 System.out.println("Error: Opción de apodo inválida. Por favor, ingrese un número válido.");
             }
-        } while (nicknameChoice < 0 || nicknameChoice >= nicknames.length);
-
-
-
-        //elige velocidad
-        int velocity = 0;
-
-        while (true) {
-            System.out.print("Velocidad: del 1 al 10: ");
-            try {
-                velocity = scanner.nextInt();
-                if (velocity >= 1 && velocity <= 10) {
-                    break; // Sale del bucle si la velocidad es válida
-                } else {
-                    System.out.println("Error: La velocidad debe estar entre 1 y 10.");
-                }
-            } catch (Exception e) {
-                System.out.println("Error: Entrada inválida. Introduce un número del 1 al 10.");
-                scanner.nextLine(); // Limpiar el búfer del escáner
-            }
         }
-
-        System.out.println(" La Velocidad es: " + velocity);
-
-        //elige destreza
-
-        System.out.print("Destreza: del 1 al 5: ");
-        int dexterity = 0;
-
-        while (true) {
-            try {
-                dexterity = scanner.nextInt();
-                if (dexterity >= 1 && dexterity <= 5) {
-                    break;// Sale del bucle si la destereza es válida
-                } else {
-                    System.out.println("Error: El valor de destreza debe estar entre 1 y 5.");
-                    System.out.print("Ingresa nuevamente el valor de destreza: ");
-                }
-            } catch (Exception e) {
-                System.out.println("Error: Entrada inválida. Ingresa un número del 1 al 5.");
-                System.out.print("Ingresa nuevamente el valor de destreza: ");
-                scanner.nextLine(); // Limpiar el búfer del escáner
-            }
-        }
-        //elige fuerza
-        System.out.print("Fuerza: del 1 al 10: ");
-        int strength = 0;
-
-        while (true) {
-            try {
-                strength = scanner.nextInt();
-                if (strength >= 1 && strength <= 10) {
-                    break;// Sale del bucle si la fuerza es válida
-                } else {
-                    System.out.println("Error: El valor de fuerza debe estar entre 1 y 10.");
-                    System.out.print("Ingresa nuevamente el valor de fuerza: ");
-                }
-            } catch (Exception e) {
-                System.out.println("Error: Entrada inválida. Ingresa un número del 1 al 10.");
-                System.out.print("Ingresa nuevamente el valor de fuerza: ");
-                scanner.nextLine(); // Limpiar el búfer del escáner
-            }
-        }
-
-        //elige nivel
-
-        System.out.print("Nivel: del 1 al 10: ");
-        int level = 0;
-
-
-        while (true) {
-            try {
-                level = scanner.nextInt();
-                if (level >= 1 && level <= 10) {
-                    break;// Sale del bucle si el nivel es válido
-                } else {
-                    System.out.println("Error: El valor de nivel debe estar entre 1 y 10.");
-                    System.out.print("Ingresa nuevamente el valor de nivel: ");
-                }
-            } catch (Exception e) {
-                System.out.println("Error: Entrada inválida. Ingresa un número del 1 al 10.");
-                System.out.print("Ingresa nuevamente el valor de nivel: ");
-                scanner.nextLine(); // Limpiar el búfer del escáner
-            }
-        }
-         //elige armadura
-
-        System.out.print("Armadura: del 1 al 10: ");
-        int armor = 0;
-
-            while (true) {
-                try {
-                    armor = scanner.nextInt();
-                    if (armor >= 1 && armor <= 10) {
-                        break; //Sale del bucle si la armadura  es válida
-
-                    } else {
-                        System.out.println("Error: El valor de armadura debe estar entre 1 y 10.");
-                        System.out.print("Ingresa nuevamente el valor de armadura: ");
-                    }
-                } catch (Exception e) {
-                    System.out.println("Error: Entrada inválida. Ingresa un número del 1 al 10.");
-                    System.out.print("Ingresa nuevamente el valor de armadura: ");
-                    scanner.nextLine(); // Limpiar el búfer del escáner
-                }
-            }
-        // elige salud
-
-        System.out.print("Salud: del 50 al 100: ");
-        int  health = 0;
-
-            while (true) {
-                try {
-                    health = scanner.nextInt();
-                    if (health >= 50 && health <= 100) {
-                        break;//Sale del bucle si la salud  es válida
-                    } else {
-                        System.out.println("Error: El valor de salud debe estar entre 50 y 100.");
-                        System.out.print("Ingresa nuevamente el valor de salud: ");
-                    }
-                } catch (Exception e) {
-                    System.out.println("Error: Entrada inválida. Ingresa un número del 50 al 100.");
-                    System.out.print("Ingresa nuevamente el valor de salud: ");
-                    scanner.nextLine(); // Limpiar el búfer del escáner
-                }
-            }
-
-
-        return new Character(name, race, nickname, velocity, dexterity, strength, level, armor, health);
-
+        return nickname;
     }
 
-        private List<Character> generateRandomCharacters () {
+    private int enterStat(Scanner scanner, String statName, int minValue, int maxValue) {
+        int stat;
+        while (true) {
+            System.out.print(statName + ": ");
+            stat = scanner.nextInt();
+            scanner.nextLine(); // Limpia el salto de línea
+
+            if (stat >= minValue && stat <= maxValue) {
+                break; // Salir del bucle si el valor es válido
+            } else {
+                System.out.println("Error: Valor de " + statName + " inválido. Por favor, ingrese un número entre " + minValue + " y " + maxValue + ".");
+            }
+        }
+        return stat;
+    }
+
+    private List<Character> generateRandomCharacters () {
             List<Character> characters = new ArrayList<>();
             Random random = new Random();
 
-            for (int i = 0; i < 2; i++) {
+           while (characters.size()<7){
                 String name = getRandomName(random);
                 String race = getRandomRace(random);
                 String nickname = getRandomNickname(random);
@@ -353,27 +325,36 @@ public class Game {
             Random random = new Random();
             return random.nextInt(max - min + 1) + min;
         }
-        private void printCharacterInfo (Character characters1, Character characters2){
-            System.out.println("Información de los personajes:");
-            System.out.println(" ");
-            System.out.println("JUGADOR  1 ");
-            printCharacterDetails(characters1);
-            System.out.println("JUGADOR  2 ");
-            printCharacterDetails(characters2);
-        }
 
-        // Método para imprimir los detalles de un personaje
-        private void printCharacterDetails (Character characters){
-            System.out.println("Nombre: " + characters.getName());
-            System.out.println("Raza: " + characters.getRace());
-            System.out.println("Apodo: " + characters.getNickname());
-            System.out.println("Velocidad: " + characters.getVelocity());
-            System.out.println("Destreza: " + characters.getDexterity());
-            System.out.println("Fuerza: " + characters.getStrength());
-            System.out.println("Nivel: " + characters.getLevel());
-            System.out.println("Armadura: " + characters.getArmor());
-            System.out.println("Salud: " + characters.getHealth());
-            System.out.println();
+
+        private void printCharacterInfo(List<Character> player1Characters, List<Character> player2Characters) {
+            System.out.println("Información de los personajes del Jugador 1:");
+            for (Character character : player1Characters) {
+                System.out.println("Nombre: " + character.getName());
+                System.out.println("Raza: " + character.getRace());
+                System.out.println("Apodo: " + character.getNickname());
+                System.out.println("Velocidad: " + character.getVelocity());
+                System.out.println("Destreza: " + character.getDexterity());
+                System.out.println("Fuerza: " + character.getStrength());
+                System.out.println("Nivel: " + character.getLevel());
+                System.out.println("Armadura: " + character.getArmor());
+                System.out.println("Salud: " + character.getHealth());
+                System.out.println("-----------");
+            }
+
+            System.out.println("Información de los personajes del Jugador 2:");
+            for (Character character : player2Characters) {
+                System.out.println("Nombre: " + character.getName());
+                System.out.println("Raza: " + character.getRace());
+                System.out.println("Apodo: " + character.getNickname());
+                System.out.println("Velocidad: " + character.getVelocity());
+                System.out.println("Destreza: " + character.getDexterity());
+                System.out.println("Fuerza: " + character.getStrength());
+                System.out.println("Nivel: " + character.getLevel());
+                System.out.println("Armadura: " + character.getArmor());
+                System.out.println("Salud: " + character.getHealth());
+                System.out.println("-----------");
+            }
         }
         private void saveLogs (List < String > logs) {
             try {
@@ -381,12 +362,14 @@ public class Game {
 
                 for (String log : logs) {
                     fileWriter.write(log + "\n");
+
                 }
 
                 fileWriter.close();
             } catch (IOException e) {
                 System.out.println("Error al guardar los logs: " + e.getMessage());
             }
+
         }
 
         private void readLogs () {
@@ -398,7 +381,7 @@ public class Game {
                     String log = scanner.nextLine();
                     System.out.println(log);
                 }
-
+                System.out.println("MUESTRA ARCHIVO DE LOGS.");
                 fileReader.close();
             } catch (IOException e) {
                 System.out.println("Error al leer los logs: " + e.getMessage());
@@ -407,10 +390,12 @@ public class Game {
 
         private void deleteLogsFile () {
             try {
+                fileWriter.close();
                 fileWriter = new FileWriter("logs.txt");
                 fileWriter.write("");
-                fileWriter.close();
                 System.out.println("Archivo de logs borrado exitosamente.");
+                Scanner scanner = new Scanner(System.in);
+                scanner.nextLine();
             } catch (IOException e) {
                 System.out.println("Error al borrar el archivo de logs: " + e.getMessage());
             }
