@@ -9,6 +9,10 @@ public class Character {
     private int armor;
     private int health;
 
+    public static boolean isLetter(char charAt) {
+        return charAt >= 65 && charAt <= 90;
+    }
+
     public String getName() {
         return name;
     }
@@ -96,10 +100,16 @@ public class Character {
         return health > 0;
     }
 
-    public void setHealth(int i) {
+   public void setHealth(int i) {
+        if (i >= 0) {
+            health = i;
+        } else {
+            System.out.println("Error: La salud no puede ser un valor negativo.");
+        }
     }
-
-
 }
+
+
+
 
 
