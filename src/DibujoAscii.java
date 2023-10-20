@@ -15,8 +15,8 @@ public class DibujoAscii {
 
 
 
-    public String dibujoOrco() {
-        String dibuO = " \u001B[34m    ,     ,   \n" +
+    public static String dibujoOrco() {
+        String dibuO = " \u001B[34m   ,     ,   \n" +
                        "   / \\. / \\  \n" +
                        "  /   \\/   \\\n" +
                        " |  o  : o  |\n" +
@@ -26,9 +26,9 @@ public class DibujoAscii {
         return dibuO;
     }
 
-   public String dibujoElfo () {
+   public static String dibujoElfo() {
 
-        String dibuE =  "\u001B[32m      |    |  \n" +
+        String dibuE =  "\u001B[32m     |    |  \n" +
                         "    /     \\   \n" +
                         "   /_______\\ \n" +
                         "   |  o o  |  \n" +
@@ -38,7 +38,7 @@ public class DibujoAscii {
         return dibuE;
         }
 
-   public String dibujoHumano(){
+   public static String dibujoHumano(){
 
         String dibuH = "\u001B[33m    O  \n" +
                        "   /|\\  \n" +

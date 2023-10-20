@@ -3,13 +3,14 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
+       TextStart.Text();
+        System.out.println();
         Scanner scanner = new Scanner(System.in);
         String city;
         boolean ciudadValida = false;
 
         do {
-            System.out.print("\u001B[1m Por favor, ingresa la ciudad desde la que quieres jugar. La ciudad no puede ser ficticia: ");
+            System.out.print("\u001B[1m Por favor, introduce la ciudad desde la que deseas jugar. La ciudad debe ser una ubicación real: ");
             city = scanner.nextLine();
 
             try {
@@ -18,7 +19,7 @@ public class Main {
                 String formattedTemperature = String.format("%.2f", temperature);
                 String description = WeatherApp.parseDescription(weatherData);
 
-                System.out.println("\u001B[36m \u001B[1m Clima en " + city + ":");
+                System.out.println("\u001B[36m \u001B[1m El Clima en " + city + ":");
                 System.out.println(" La temperatura actual es: " + formattedTemperature + "°C");
                 System.out.println(" El cielo está: " + description);
 
