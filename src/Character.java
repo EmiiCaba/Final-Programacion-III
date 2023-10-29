@@ -163,7 +163,6 @@ public class Character {
         }
         return name;
     }
-
     private static Race enterRace(Scanner scanner) {
         Race race;
         while (true) {
@@ -171,14 +170,14 @@ public class Character {
             for (Race raceOption : Race.values()) {
                 System.out.println(raceOption.ordinal() + ". " + raceOption.name());
             }
-            int raceChoice = scanner.nextInt();
-            scanner.nextLine(); // Limpia el salto de línea
+            String raceChoiceStr = scanner.nextLine();
 
-            if (raceChoice >= 0 && raceChoice < Race.values().length) {
+            if (raceChoiceStr.matches("[0-2]")) {
+                int raceChoice = Integer.parseInt(raceChoiceStr);
                 race = Race.values()[raceChoice];
                 break;
             } else {
-                System.out.println("Error: Opción de raza inválida. Por favor, ingrese un número válido.");
+                System.out.println("Error: Opción de raza inválida. Por favor, ingrese un número válido (0, 1 o 2).");
             }
         }
         return race;
@@ -212,34 +211,44 @@ public class Character {
             for (int i = 0; i < nicknames.length; i++) {
                 System.out.println(i + ". " + nicknames[i]);
             }
-            int nicknameChoice = scanner.nextInt();
-            scanner.nextLine(); // Limpia el salto de línea
+            String nicknameChoiceStr = scanner.nextLine();
 
-            if (nicknameChoice >= 0 && nicknameChoice < nicknames.length) {
-                nickname = nicknames[nicknameChoice];
-                break;
-            } else {
+            try {
+                int nicknameChoice = Integer.parseInt(nicknameChoiceStr);
+                if (nicknameChoice >= 0 && nicknameChoice < nicknames.length) {
+                    nickname = nicknames[nicknameChoice];
+                    break;
+                } else {
+                    System.out.println("Error: Opción de apodo inválida. Por favor, ingrese un número válido.");
+                }
+            } catch (NumberFormatException e) {
                 System.out.println("Error: Opción de apodo inválida. Por favor, ingrese un número válido.");
             }
         }
         return nickname;
     }
 
+
     private static int enterStat(Scanner scanner, String statName, int minValue, int maxValue) {
         int stat;
         while (true) {
             System.out.print(statName + ": ");
-            stat = scanner.nextInt();
-            scanner.nextLine(); // Limpia el salto de línea
+            String statStr = scanner.nextLine();
 
-            if (stat >= minValue && stat <= maxValue) {
-                break; // Salir del bucle si el valor es válido
-            } else {
-                System.out.println("Error: Valor de " + statName + " inválido. Por favor, ingrese un número entre " + minValue + " y " + maxValue + ".");
+            try {
+                stat = Integer.parseInt(statStr);
+                if (stat >= minValue && stat <= maxValue) {
+                    break; // Salir del bucle si el valor es válido
+                } else {
+                    System.out.println("Error: Valor de " + statName + " inválido. Por favor, ingrese un número entre " + minValue + " y " + maxValue + ".");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Valor de " + statName + " inválido. Por favor, ingrese un número válido.");
             }
         }
         return stat;
     }
+
 
     static List<Character> generateRandomCharacters() {
         List<Character> characters = new ArrayList<>();

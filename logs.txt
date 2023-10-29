@@ -65,3 +65,8 @@ Orco ataca a Elfo y le quita 50 de salud. Elfo queda con 28 de salud.
 Elfo ataca a Orco y le quita 1743 de salud. Orco queda con 0 de salud.
 Elfo ataca a Elfo y le quita 63 de salud. Elfo queda con 10 de salud.
 Elfo ataca a Elfo y le quita 11 de salud. Elfo queda con 0 de salud.
+Elfo ataca a Humano y le quita 2117 de salud. Humano queda con 0 de salud.
+Orco ataca a Elfo y le quita 0 de salud. Elfo queda con 90 de salud.
+Humano ataca a Elfo y le quita 0 de salud. Elfo queda con 90 de salud.
+Elfo ataca a Elfo y le quita 0 de salud. Elfo queda con 90 de salud.
+Humano ataca a Elfo y le quita 76 de salud. Elfo queda con 0 de salud.

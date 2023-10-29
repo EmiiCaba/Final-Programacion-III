@@ -65,19 +65,17 @@ public class AgeAndBirthDate {
     }
 
     //Calcular edad Manual
+
     static LocalDate enterBirthDateManually(Scanner scanner, Race race) {
-        int age = 0;
         int minAge = 15;
         int maxAge = 85;
 
         if (race == Race.ELFO) {
             minAge = 100;
-            maxAge = 250;// Límite máximo de edad para Elfos
-
+            maxAge = 250; // Límite máximo de edad para Elfos
         } else if (race == Race.ORCO) {
             minAge = 20;
             maxAge = 80; // Límite máximo de edad para Orcos
-
         } else if (race == Race.HUMAN) {
             minAge = 15;
             maxAge = 95; // Límite máximo de edad para Humanos
@@ -85,22 +83,28 @@ public class AgeAndBirthDate {
 
         while (true) {
             System.out.print("Ingresa la edad (" + minAge + "-" + maxAge + "): ");
-            scanner.nextLine(); // Consumir el salto de línea
+            String ageStr = scanner.nextLine();
 
             try {
-                int birthYear = generateRandomBirthYear();
-                int birthMonth = generateRandomBirthMonth();
-                int birthDay = generateRandomBirthDay(birthYear, birthMonth);
+                int age = Integer.parseInt(ageStr);
+                if (age >= minAge && age <= maxAge) {
+                    int birthYear = generateRandomBirthYear();
+                    int birthMonth = generateRandomBirthMonth();
+                    int birthDay = generateRandomBirthDay(birthYear, birthMonth);
 
-                // Crear la fecha de nacimiento
-                LocalDate birthDate = LocalDate.of(birthYear, birthMonth, birthDay);
-                System.out.println("Fecha de nacimiento: " + birthDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-                return birthDate;
+                    // Crear la fecha de nacimiento
+                    LocalDate birthDate = LocalDate.of(birthYear, birthMonth, birthDay);
+                    System.out.println("Fecha de nacimiento: " + birthDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                    return birthDate;
+                } else {
+                    System.out.println("Por favor, ingresa una edad válida entre " + minAge + " y " + maxAge + ".");
+                }
             } catch (NumberFormatException e) {
                 System.out.println("Por favor, ingresa una edad válida.");
             }
         }
     }
+
     static int generateRandomBirthYear() {
         Random random = new Random();
         int minBirthYear = 1;
