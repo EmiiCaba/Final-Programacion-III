@@ -22,7 +22,7 @@ public class DibujoAscii {
                        " |  o  : o  |\n" +
                        " |  .  : .  |\n" +
                        "  \\   /\\   /\n" +
-                       "   \\_/ \\_ /   ";
+                       "   \\_/ \\_ /   \u001B[0m";
         return dibuO;
     }
 
@@ -34,7 +34,7 @@ public class DibujoAscii {
                         "   |  o o  |  \n" +
                         "   |   ^   |  \n" +
                         "   |   -   |  \n" +
-                        "    \\_____/  ";
+                        "    \\_____/  \u001B[0m";
         return dibuE;
         }
 
@@ -42,7 +42,7 @@ public class DibujoAscii {
 
         String dibuH = "\u001B[33m    O  \n" +
                        "   /|\\  \n" +
-                       "   / \\  ";
+                       "   / \\ \u001B[0m ";
         return dibuH;
     }
 

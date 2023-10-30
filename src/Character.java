@@ -358,7 +358,7 @@ public class Character {
             System.out.println("Edad: " + character.getAge());
             System.out.println("Fecha de nacimiento: " + character.getBirthDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
 
-            System.out.println("-----------");
+            System.out.println("\u001B[33m-----------\u001B[0m");
         }
 
         System.out.println("Información de los personajes del Jugador 2:");
@@ -374,7 +374,7 @@ public class Character {
             System.out.println("Salud: " + character.getHealth());
             System.out.println("Edad: " + character.getAge());
             System.out.println("Fecha de nacimiento: " + character.getBirthDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            System.out.println("-----------");
+            System.out.println("\u001B[30m-----------\u001B[0m");
         }
     }
 

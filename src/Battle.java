@@ -7,122 +7,90 @@ public class Battle {
     private List<Character> player2Characters;
     private List<String> battleLogs;
     private Random random;
-    List<Character> characters;
-    DibujoAscii dibujoAscii = new DibujoAscii();
+    private List<Character> winners;
 
-    public Battle(List<Character> player1Characters, List<Character> player2Characters, List<Character> characters){
-        if (player1Characters == null || player2Characters == null || characters == null) {
+    public Battle(List<Character> player1Characters, List<Character> player2Characters, List<Character> characters) {
+        if (player1Characters == null || player2Characters == null) {
             throw new IllegalArgumentException("Las listas no pueden ser nulas.");
-       }
-            if (characters.size() < 6) {
-                throw new IllegalArgumentException("No hay suficientes personajes para iniciar la batalla.");
+        }
+        if (player1Characters.size() != player2Characters.size()) {
+            throw new IllegalArgumentException("Ambos jugadores deben tener la misma cantidad de personajes.");
         }
 
-        this.characters = characters;
         this.player1Characters = player1Characters;
         this.player2Characters = player2Characters;
         this.battleLogs = new ArrayList<>();
-
         this.random = new Random();
+        this.winners = new ArrayList<>();
     }
-    public void start () {
 
-        if (characters == null || characters.size() < 7) {
-            System.out.println("No hay suficientes personajes para iniciar la batalla.");
-            return;
-        }
-        List<Character> player1Characters = new ArrayList<>(characters.subList(0, 3));
-        List<Character> player2Characters = new ArrayList<>(characters.subList(3, 6));
+    public void start() {
+        int numRounds = player1Characters.size();
 
+        for (int round = 0; round < numRounds; round++) {
+            Character player1 = player1Characters.get(round);
+            Character player2 = player2Characters.get(round);
 
-        //int randomIndex = random.nextInt(3);
+            System.out.println("\u001B[31m ------   Ronda de batalla: " + (round + 1) + "---------\u001B[0m");
+            System.out.println(player1.getName() + " VS " + player2.getName());
 
-        for (int i = 0; i < 3; i++) {
-            Character player1 = player1Characters.get(i);
-            Character player2 = player2Characters.get(i);
+            Character winner = fight(player1, player2);
+            winners.add(winner);
 
-
-            System.out.println("\u001B[31m ------   Ronda de batalla: " + (i + 1) + "---------\u001B[0m");
-
-            System.out.println(player1.getName(player2.getLevel() + 1) + " VS " + player2.getName(player2.getLevel() + 1));
-
-            int attacks = 0;
-            while (attacks < 3 && player1.isAlive() && player2.isAlive()) {
-                attacks++;
-                Character attacker = getRandomAttacker();
-                Character defender = (attacker == player1) ? player2 : player1;
-
-                int attackPower = attacker.calculateAttackPower();
-                int defensePower = defender.calculateDefensePower();
-
-                int effectiveness = random.nextInt(100) + 1;
-                int damage = calculateDamage(attackPower, defensePower, effectiveness, attacker.getRace());
-
-
-                defender.takeDamage(damage);
-
-                String log = attacker.getName(player2.getLevel() + 1) + " ataca a " + defender.getName(player2.getLevel() + 1) + " y le quita " +
-                        damage + " de salud. " + defender.getName(player2.getLevel() + 1) + " queda con " + defender.getHealth() + " de salud.";
-                System.out.println(log);
-                battleLogs.add(log);
-
-                // Intercambia atacante y defensor
-                Character temp = attacker;
-                attacker = defender;
-                defender = temp;
-
-            }
-
-            if (!player1.isAlive() && !player2.isAlive()) {
-                System.out.println("¡Empataron !" + player1.getName() + "  y   " + player2.getName());
-            } else if (player1.isAlive()) {
-                String winnerName = player1.getName(player1.getLevel() + 1);
-                System.out.println("¡Gana  el " + winnerName + "  " + player1.getName() + "!!!");
-                player1.setHealth(player1.getHealth() + 10);
-                printWinnerInfo(player1);
-
-            } else {
-                String winnerName = player2.getName(player2.getLevel() + 1);
-                System.out.println("¡Gana el  " + winnerName + "   " + player2.getName() + "!!!");
-                player2.setHealth(player2.getHealth() + 10);
-                printWinnerInfo(player2);
-
-            }
+            System.out.println("\u001B[32m¡Ganaste sobreviviste   " + winner.getName() + " en la ronda " + (round + 1) + "!\u001B[0m");
             System.out.println();
-        }
-    }
-    private int calculateDamage(int attackPower, int defensePower, int effectiveness, String race) {
-            double damageModifier = 1.0;
 
-            if (race.equalsIgnoreCase("ELFO")) {
-                damageModifier = 1.05;
-            } else if (race.equalsIgnoreCase("ORCO")) {
-                damageModifier = 1.1;
+            if (round == numRounds - 1) {
+                System.out.println("\u001B[34m¡Felicitaciones  El ganador Final  es " + winner.getName() + "! , las fuerzas mágicas del universo luz te abrazan!\u001B[0m");
+                System.out.println("___________________________________________");
             }
+        }
+    }
 
-            double damage = (attackPower / defensePower) * effectiveness * damageModifier;
-            return (int) Math.round(damage);
+    private Character fight(Character player1, Character player2) {
+        int attacks = 0;
+        while (attacks < 3 && player1.isAlive() && player2.isAlive()) {
+            attacks++;
+            Character attacker = getRandomAttacker();
+            Character defender = (attacker == player1) ? player2 : player1;
+
+            int attackPower = attacker.calculateAttackPower();
+            int defensePower = defender.calculateDefensePower();
+
+            int effectiveness = random.nextInt(100) + 1;
+            int damage = calculateDamage(attackPower, defensePower, effectiveness);
+
+            defender.takeDamage(damage);
+
+            String log = attacker.getName() + " ataca a " + defender.getName() + " y le quita " +
+                    damage + " de salud. " + defender.getName() + " queda con " + defender.getHealth() + " de salud.";
+            battleLogs.add(log);
+            System.out.println(log);
         }
 
-    private void printWinnerInfo(Character winner){
-    String raceName = winner.getRace().equalsIgnoreCase("HUMAN") ? "HUMAN" :
-            winner.getRace().equalsIgnoreCase("ELFO") ? "ELFO" : "ORCO";
-
-        System.out.println("\u001B[36m Yo soy el " + raceName + " GANADOR DEL TRONO DE HIERRO :  \n" + winner.getName()+ "\u001B[0m");
-        System.out.println(dibujoAscii.dibujoByRace(winner.getRace()));
+        return player1.isAlive() ? player1 : player2;
     }
-    private Character getRandomAttacker () {
-        Random random = new Random();
-        int randomIndex = random.nextInt(3); // Índice aleatorio (0, 1 o 2)
 
-        // Obtener un personaje aleatorio de la lista
-        return random.nextBoolean() ? player1Characters.get(randomIndex) : player2Characters.get(randomIndex);
+    private int calculateDamage(int attackPower, int defensePower, int effectiveness) {
+        double damage = (attackPower / defensePower) * effectiveness;
+        return (int) Math.round(damage);
     }
+
+    private Character getRandomAttacker() {
+        return random.nextBoolean() ? player1Characters.get(random.nextInt(player1Characters.size())) :
+                player2Characters.get(random.nextInt(player2Characters.size()));
+    }
+
     public List<String> getBattleLogs() {
         return battleLogs;
     }
 
+    public List<Character> getWinners() {
+        return winners;
+    }
 }
+
+
 
 
 
