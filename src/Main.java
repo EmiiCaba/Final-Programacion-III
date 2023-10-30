@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) {
        TextStart.Text();
         System.out.println();
-        Scanner scanner = new Scanner(System.in);Peeru
+        Scanner scanner = new Scanner(System.in);
         String city;
         boolean ciudadValida = false;
 
