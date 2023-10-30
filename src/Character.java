@@ -248,52 +248,94 @@ public class Character {
         }
         return stat;
     }
+    private static String getRandomRace(Random random) {
+        Race[] races = Race.values();
+        int randomIndex = random.nextInt(races.length);
+        return races[randomIndex].name();
+    }
 
+    private static String getRandomNickname(Random random, Race race) {
+        switch (race) {
+            case HUMAN:
+                NicknameHuman[] humanNicknames = NicknameHuman.values();
+                int randomIndex = random.nextInt(humanNicknames.length);
+                return humanNicknames[randomIndex].name();
+            case ORCO:
+                NicknameOrc[] orcNicknames = NicknameOrc.values();
+                randomIndex = random.nextInt(orcNicknames.length);
+                return orcNicknames[randomIndex].name();
+            case ELFO:
+                NicknameElf[] elfNicknames = NicknameElf.values();
+                randomIndex = random.nextInt(elfNicknames.length);
+                return elfNicknames[randomIndex].name();
+            default:
+                throw new IllegalArgumentException("Raza inválida");
+        }
+    }
+
+    private static String getRandomName(Random random, Race race, Set<String> usedNames) {
+        switch (race) {
+            case HUMAN:
+                NamesHuman[] humanNames = NamesHuman.values();
+                int randomIndex = random.nextInt(humanNames.length);
+                String name = humanNames[randomIndex].name();
+                while (usedNames.contains(name)) {
+                    randomIndex = random.nextInt(humanNames.length);
+                    name = humanNames[randomIndex].name();
+                }
+                usedNames.add(name);
+                return name;
+            case ORCO:
+                NamesOrc[] orcNames = NamesOrc.values();
+                randomIndex = random.nextInt(orcNames.length);
+                name = orcNames[randomIndex].name();
+                while (usedNames.contains(name)) {
+                    randomIndex = random.nextInt(orcNames.length);
+                    name = orcNames[randomIndex].name();
+                }
+                usedNames.add(name);
+                return name;
+            case ELFO:
+                NamesElf[] elfNames = NamesElf.values();
+                randomIndex = random.nextInt(elfNames.length);
+                name = elfNames[randomIndex].name();
+                while (usedNames.contains(name)) {
+                    randomIndex = random.nextInt(elfNames.length);
+                    name = elfNames[randomIndex].name();
+                }
+                usedNames.add(name);
+                return name;
+            default:
+                throw new IllegalArgumentException("Raza inválida");
+        }
+    }
 
     static List<Character> generateRandomCharacters() {
         List<Character> characters = new ArrayList<>();
         Random random = new Random();
+        Set<String> usedNames = new HashSet<>();
 
-        while (characters.size()<7){
-            String name = getRandomName(random);
-            String race = getRandomRace(random);
-            String nickname = getRandomNickname(random);
+        while (characters.size() < 7) {
+            Race race = Race.valueOf(getRandomRace(random));
+            String name = getRandomName(random, race, usedNames);
+            String nickname = getRandomNickname(random, race);
             int velocity = getRandomNumber(1, 10);
             int dexterity = getRandomNumber(1, 5);
             int strength = getRandomNumber(1, 10);
             int level = getRandomNumber(1, 10);
             int armor = getRandomNumber(1, 10);
             int health = getRandomNumber(50, 100);
-            AgeAndBirthDate ageAndBirthDate = AgeAndBirthDate.getRandomAge( random, race);
-            int age = AgeAndBirthDate.getRandomAge(random, race).getAge();
+            AgeAndBirthDate ageAndBirthDate = AgeAndBirthDate.getRandomAge(random, String.valueOf(race));
+            int age = ageAndBirthDate.getAge();
             LocalDate birthDate = ageAndBirthDate.getBirthDate();
 
-
-            Character character = new Character(name, race, nickname, velocity, dexterity, strength, level, armor, health, age,  birthDate);
+            Character character = new Character(name, race.name(), nickname, velocity, dexterity, strength, level, armor, health, age, birthDate);
             characters.add(character);
-
         }
 
         return characters;
     }
 
-    private static String getRandomRace(Random random){
-        Race[] races = Race.values();
-        int randomIndex = random.nextInt(races.length);
-        return races[randomIndex].name();
-    }
-
-    private static String getRandomNickname(Random random){
-        NicknameElf[] nicknames = NicknameElf.values();
-        int randomIndex = random.nextInt(nicknames.length);
-        return nicknames[randomIndex].name();
-    }
-
-    private static String getRandomName(Random random){
-        Names[] names = Names.values();
-        int randomIndex = random.nextInt(names.length);
-        return names[randomIndex].name();
-    }
 
 
     private static int getRandomNumber(int min, int max){
